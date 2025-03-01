@@ -9,14 +9,13 @@ def enemy_attack(player_pokemon, enemy_pokemon):
 
         enemy_attack_selection = random.choice(enemy_attacks)
 
-        enemy_damage_with_type_percentage_applied = int(str(enemy_attack_selection['damage']).replace("--", "0")) * \
+        enemy_type_damage_applied = int(str(enemy_attack_selection['damage']).replace("--", "0")) * \
                                                             type_calculator(player_pokemon, enemy_pokemon)
 
-        player_pokemon["current_health"] -= enemy_damage_with_type_percentage_applied
-
+        player_pokemon["current_health"] -= enemy_type_damage_applied
 
 def capture_pokeball(player_profile, enemy_pokemon):
-    if (player_profile["pokeballs"] > 0 or player_profile["ultraballs"] > 0) and len(player_profile["pokemon_inventory"]) < 6:
+    if (player_profile["pokeballs"] > 0 or player_profile["ultraballs"] > 0) and len(player_profile["pokemon_team"]) < 6:
         base_probability = 0.10
         final_probability = base_probability
 
@@ -27,7 +26,7 @@ def capture_pokeball(player_profile, enemy_pokemon):
         else:                                        #vida roja
             final_probability *= 9
 
-        # Usar Ultra Ball si está disponible, con mayor probabilidad
+        # Se usa la Ultraball si está disponible, con mayor probabilidad
         if player_profile["ultraballs"] > 0:
             player_profile["ultraballs"] -= 1
             final_probability *= 3
@@ -37,7 +36,7 @@ def capture_pokeball(player_profile, enemy_pokemon):
             print("Has usado una Pokéball!")
 
         if random.random() <= final_probability:
-            player_profile["pokemon_inventory"].append(enemy_pokemon)
+            player_profile["pokemon_team"].append(enemy_pokemon)
             print("¡Lo has capturado!")
             return True
         else:
@@ -46,8 +45,6 @@ def capture_pokeball(player_profile, enemy_pokemon):
     else:
         print("No puedes capturar más Pokémons o no tienes Pokéballs disponibles.")
         return False
-
-
 
 def type_calculator(player_pokemon, enemy_pokemon):
     multiplier = 1
